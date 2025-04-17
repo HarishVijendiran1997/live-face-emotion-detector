@@ -1,12 +1,27 @@
-# React + Vite
+# 🎥 Live Face Emotion Detector
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple React app that uses [`face-api.js`](https://github.com/justadudewhohacks/face-api.js) to detect a user's face and recognize their dominant emotion in real-time using their webcam.
 
-Currently, two official plugins are available:
+The app draws a bounding box around the face and displays the most likely emotion with an emoji. For better usability on mobile, the canvas overlay is hidden on smaller screens.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+- React
+- face-api.js
+- TailwindCSS
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📱 Features
+
+- Real-time face detection and emotion recognition
+- Visual emoji and confidence percentage for emotion
+- Mobile-friendly design: hides canvas on smaller screens
+
+## 📷 Emotions Detected
+
+- 😊 Happy  
+- 😢 Sad  
+- 😠 Angry  
+- 😨 Fearful  
+- 🤢 Disgusted  
+- 😲 Surprised  
+- 😐 Neutral
