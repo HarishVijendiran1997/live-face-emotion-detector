@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as faceapi from 'face-api.js';
 
 const EmotionDetector = () => {
 
     const videoRef = useRef(null)
     const canvasRef = useRef(null);
+    const [emotion, setEmotion] = useState(null)
 
     //Starting webcam
     const startVideo = async () => {
@@ -29,17 +30,36 @@ const EmotionDetector = () => {
         }
     }
 
-    //Detecting face in the live stream
-    const detectFace = async () => {
-        const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
-        console.log("🔍 Detected faces:", detections);
+    //Detect faces and emotions in the webcam stream
+    const detectFacesAndEmotions = async () => {
+        const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions()
+        console.log("😊 Detected Faces & Emotions:");
+        if (detections.length > 0) {
+            detections.forEach((detection, i) => {
+                const { expressions } = detection;
+                console.log(expressions);
+                const Emotions = Object.keys(expressions)
+                console.log(Emotions);
+                const dominantEmotion = Object.keys(expressions).reduce((a, b) => expressions[a] > expressions[b] ? a : b)
+                console.log(dominantEmotion);
+                console.log(`Face : ${dominantEmotion} (${(expressions[dominantEmotion] * 100).toFixed(2)}%)`);
+                setEmotion({
+                    name: dominantEmotion,
+                    confidence: (expressions[dominantEmotion]*100).toFixed(2)
+                })
+            });
+        } else {
+            console.log("😔 No faces detected.");
+            setEmotion(null)
+        }
     }
+
 
     useEffect(() => {
         loadModels()
         startVideo()
         const interval = setInterval(() => {
-            detectFace()
+            detectFacesAndEmotions()
         }, 2000)
 
         return () => clearInterval(interval)
@@ -48,7 +68,7 @@ const EmotionDetector = () => {
 
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
             <h1 className="text-2xl mb-4">🎥 Live Face Emotion Detector</h1>
             <video
                 ref={videoRef}
