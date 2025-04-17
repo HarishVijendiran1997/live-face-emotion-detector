@@ -23,6 +23,7 @@ const EmotionDetector = () => {
             videoRef.current.srcObject = stream
         } catch (error) {
             console.error("Error accessing webcam", error);
+            alert("Camera access denied or not supported in this environment.");
         }
     }
 
