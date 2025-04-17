@@ -45,8 +45,13 @@ const EmotionDetector = () => {
 
         const detections = await faceapi.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions()
 
+
+        const canvas = canvasRef.current
+        faceapi.matchDimensions(canvas, videoRef.current)
+
         // console.log("😊 Detected Faces & Emotions:");
         if (detections && detections.expressions) {
+            faceapi.draw.drawDetections(canvas, detections)
             const { expressions } = detections;
             // console.log(expressions);
             const Emotions = Object.keys(expressions)
@@ -70,7 +75,7 @@ const EmotionDetector = () => {
         startVideo()
         const interval = setInterval(() => {
             detectFacesAndEmotions()
-        }, 2000)
+        }, 200)
 
         return () => clearInterval(interval)
     }, [])
@@ -79,15 +84,23 @@ const EmotionDetector = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-900 text-white">
-            <h1 className="text-2xl mb-4">🎥 Live Face Emotion Detector</h1>
-            <video
-                ref={videoRef}
-                autoPlay
-                muted
-                className="rounded-lg shadow-lg border-2 border-white"
-                // width="640"
-                // height="480"
-            />
+            <h1 className="text-2xl mb-4">Live Face Emotion Detector</h1>
+            <div className='relative'>
+                <video
+                    ref={videoRef}
+                    autoPlay
+                    muted
+                    className="rounded-lg shadow-lg border-2 border-white"
+                    width="640"
+                    height="480"
+                />
+                <canvas
+                    ref={canvasRef}
+                    className='absolute top-0 left-0 hidden sm:block'
+                    width="640"
+                    height="480"
+                />
+            </div>
             <div className="mt-4">
                 {emotion ? (
                     <div className="text-xl font-semibold text-green-400">
